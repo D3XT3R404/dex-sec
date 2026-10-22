@@ -1,0 +1,46 @@
+openapi: 3.0.3
+info:
+  title: DEX-SEC Demo API
+  version: 1.0.0
+paths:
+  /search:
+    get:
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: search results
+  /greet:
+    get:
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: greeting
+  /file:
+    get:
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: file content
+  /missing:
+    get:
+      parameters:
+        - name: ref
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: always explodes

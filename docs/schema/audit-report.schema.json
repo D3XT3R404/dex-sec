@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/your-org/dex-sec/schema/audit-report.schema.json",
+  "title": "DEX-SEC Audit Report",
+  "description": "Struktur laporan JSON yang dihasilkan perintah `dexsec scan --json <file>`.",
+  "type": "object",
+  "required": ["project_path", "target_url", "started_at", "stats", "correlated"],
+  "properties": {
+    "project_path": { "type": "string", "description": "Path absolut project yang diaudit." },
+    "target_url": { "type": "string", "description": "Base URL target yang dipakai untuk verifikasi." },
+    "started_at": { "type": "string", "description": "Waktu mulai (ISO 8601)." },
+    "finished_at": { "type": "string", "description": "Waktu selesai (ISO 8601)." },
+    "stats": {
+      "type": "object",
+      "description": "Angka ringkasan.",
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 },
+        "confirmed": { "type": "integer", "minimum": 0 },
+        "potential": { "type": "integer", "minimum": 0 },
+        "not_reproducible": { "type": "integer", "minimum": 0 },
+        "by_severity": { "type": "object", "additionalProperties": { "type": "integer" } },
+        "by_vuln_class": { "type": "object", "additionalProperties": { "type": "integer" } }
+      }
+    },
+    "routes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "method": { "type": "string" },
+          "path": { "type": "string" },
+          "file": { "type": "string" },
+          "line": { "type": "integer" },
+          "framework": { "type": "string" },
+          "params": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "description": "Temuan statis (hasil analisis kode).",
+      "items": {
+        "type": "object",
+        "properties": {
+          "vuln_class": { "type": "string" },
+          "severity": { "type": "string", "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"] },
+          "file": { "type": "string" },
+          "line": { "type": "integer" },
+          "cwe": { "type": "string" },
+          "description": { "type": "string" },
+          "code_snippet": { "type": "string" },
+          "taint_var": { "type": "string" },
+          "confidence": { "type": "number" }
+        },
+        "required": ["vuln_class", "severity", "file", "line"]
+      }
+    },
+    "verifications": {
+      "type": "array",
+      "description": "Hasil probe eksternal terhadap target.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "vuln_class": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["CONFIRMED_VULNERABLE", "POTENTIAL", "NOT_REPRODUCIBLE", "ERROR", "SKIPPED"]
+          },
+          "target_url": { "type": "string" },
+          "payload": { "type": "string" },
+          "evidence": { "type": "string" },
+          "http_status": { "type": ["integer", "null"] },
+          "safe_poc_curl": { "type": "string" }
+        },
+        "required": ["vuln_class", "status"]
+      }
+    },
+    "correlated": {
+      "type": "array",
+      "description": "Temuan setelah digabung dengan bukti eksternal.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "finding": { "type": "object" },
+          "verification": { "type": ["object", "null"] },
+          "final_severity": { "type": "string" },
+          "status": { "type": "string" },
+          "title": { "type": "string" },
+          "impact": { "type": "string" },
+          "remediation_hint": { "type": "string" }
+        },
+        "required": ["finding", "final_severity", "status", "title"]
+      }
+    },
+    "patches": {
+      "type": "array",
+      "description": "Usulan perbaikan (unified diff).",
+      "items": {
+        "type": "object",
+        "properties": {
+          "finding_ref": { "type": "string" },
+          "vuln_class": { "type": "string" },
+          "diff": { "type": "string" },
+          "explanation": { "type": "string" },
+          "source": { "type": "string" }
+        },
+        "required": ["finding_ref", "diff"]
+      }
+    },
+    "chains": {
+      "type": "array",
+      "description": "Skenario serangan berantai.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "severity": { "type": "string" },
+          "steps": { "type": "array", "items": { "type": "string" } },
+          "reasoning": { "type": "string" },
+          "impact": { "type": "string" },
+          "involved": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["title", "severity"]
+      }
+    },
+    "next_steps": {
+      "type": "array",
+      "description": "Rencana tindak lanjut.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "rationale": { "type": "string" },
+          "priority": { "type": "string", "enum": ["HIGH", "MEDIUM", "LOW"] },
+          "commands": { "type": "array", "items": { "type": "string" } },
+          "relates_to": { "type": "string" }
+        },
+        "required": ["title", "rationale"]
+      }
+    },
+    "errors": { "type": "array", "items": { "type": "string" } }
+  }
+}

@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# DEX-SEC output
+hasil-scan/
+.pyinstaller-build/
+dexsec-report.json
+laporan.json
+laporan.md
+laporan.html
+laporan.sarif
+ringkasan.pdf
+*.patch
+
+# Sandbox / demo artefacts
+sandbox/vuln_web/products.db
+demo/**/*.db
+
+# Tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+.vscode/
+.idea/
+*.log
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini

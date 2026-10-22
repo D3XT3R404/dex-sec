@@ -1,0 +1,31 @@
+{
+  "name": "dexsec",
+  "version": "0.6.0",
+  "description": "DEX-SEC — Inside-Out Hybrid Application Security Testing CLI (SAST + safe DAST + AI remediation)",
+  "keywords": [
+    "security",
+    "sast",
+    "dast",
+    "pentest",
+    "appsec",
+    "vulnerability",
+    "code-audit",
+    "owasp"
+  ],
+  "license": "MIT",
+  "bin": {
+    "dexsec": "bin/dexsec.js"
+  },
+  "files": [
+    "bin/",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=16"
+  },
+  "os": [
+    "win32",
+    "linux",
+    "darwin"
+  ]
+}

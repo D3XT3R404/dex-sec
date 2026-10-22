@@ -1,0 +1,89 @@
+name: DEX-SEC security scan
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Base URL of the running application (optional)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  dexsec:
+    name: DEX-SEC inside-out audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install DEX-SEC
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install .
+
+      - name: Static analysis (always runs)
+        run: |
+          python -m dexsec scan --path . --json dexsec-static.json --report dexsec-static.md
+
+      - name: Verify exploitability against a live target
+        if: ${{ inputs.target != '' }}
+        env:
+          TARGET: ${{ inputs.target }}
+        run: |
+          python -m dexsec scan --path . --target "$TARGET" \
+            --json dexsec.json --report dexsec.md --patch-out dexsec-fixes.patch
+
+      - name: Show the summary
+        run: |
+          if [ -f dexsec.json ]; then
+            python - <<'PY'
+          import json
+          data = json.load(open("dexsec.json"))
+          stats = data.get("stats", {})
+          print("DEX-SEC summary:", json.dumps(stats, indent=2))
+          confirmed = [c for c in data.get("correlated", []) if c.get("status") == "CONFIRMED_VULNERABLE"]
+          for item in confirmed:
+              print(f"  [CRITICAL] {item['title']}")
+          PY
+          fi
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dexsec-reports
+          path: |
+            dexsec.json
+            dexsec.md
+            dexsec-static.json
+            dexsec-static.md
+            dexsec-fixes.patch
+          if-no-files-found: ignore
+
+      - name: Fail the build on confirmed critical findings
+        if: ${{ always() && inputs.target != '' }}
+        run: |
+          python - <<'PY'
+          import json, sys, pathlib
+          path = pathlib.Path("dexsec.json")
+          if not path.exists():
+              sys.exit(0)
+          data = json.load(open(path))
+          critical = [c for c in data.get("correlated", [])
+                      if c.get("status") == "CONFIRMED_VULNERABLE"
+                      and c.get("final_severity") in ("CRITICAL", "HIGH")]
+          if critical:
+              print(f"{len(critical)} confirmed HIGH/CRITICAL findings")
+              for item in critical:
+                  print(" -", item["title"])
+              sys.exit(1)
+          PY
