@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dexsec"
-version = "0.7.0"
+version = "0.7.1"
 description = "DEX-SEC — Inside-Out Hybrid Application Security Testing CLI (SAST + safe DAST + auto-remediation)"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.10"
@@ -61,10 +61,10 @@ dev = ["pytest>=7.0.0", "build>=1.0.0", "twine>=5.0.0", "pyinstaller>=6.0.0"]
 dexsec = "dexsec.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/your-org/dex-sec"
-Documentation = "https://github.com/your-org/dex-sec/blob/main/docs/PANDUAN-OPERASIONAL.md"
-Changelog = "https://github.com/your-org/dex-sec/blob/main/CHANGELOG.md"
-Issues = "https://github.com/your-org/dex-sec/issues"
+Homepage = "https://github.com/D3XT3R404/dex-sec"
+Documentation = "https://github.com/D3XT3R404/dex-sec#readme"
+Changelog = "https://github.com/D3XT3R404/dex-sec/blob/main/CHANGELOG.md"
+Issues = "https://github.com/D3XT3R404/dex-sec/issues"
 
 [tool.setuptools.packages.find]
 include = ["dexsec*"]
