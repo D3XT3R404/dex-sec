@@ -4,6 +4,20 @@ All notable changes to DEX-SEC are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/) and the
 project uses [Semantic Versioning](https://semver.org/).
 
+## [0.7.1] — 2026-10-24
+
+### Fixed
+- **Rilis otomatis ke PyPI kembali berjalan.** Workflow `release.yml` memakai
+  `secrets` di dalam ekspresi `if:`, yang tidak diizinkan GitHub, sehingga
+  seluruh workflow ditolak sebagai *invalid workflow file* dan rilis tidak pernah
+  berjalan. Kondisi `NPM_TOKEN` sekarang diperiksa di dalam `run:` melalui
+  environment variable.
+- **CI tidak gagal lagi karena PyYAML.** `tests/test_features.py` membutuhkan
+  PyYAML (untuk membaca `demo/openapi.yaml`), tetapi `pyyaml` hanya ada di
+  extra `yaml` saja. Package `pyyaml` kini ikut dalam extra `dev` yang dipakai
+  oleh pipeline CI dan release.
+- Verifikasi command injection dirapikan agar output canary tidak lagi ambigu.
+
 ## [0.7.0] — 2026-10-22
 
 ### Added
