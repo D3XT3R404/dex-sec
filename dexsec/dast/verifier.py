@@ -245,8 +245,15 @@ class Verifier:
             resp, _, err = self._request(route.method, route.path, param, probe.payload)
             if err or resp is None:
                 continue
-            body = resp.text or ""
-            if CANARY_RE.search(body):
+                body = resp.text or ""
+
+# Canaries must appear as a standalone output line.
+# A canary merely reflected inside user input is not proof
+# that a shell command was executed.
+            if any(
+                CANARY_RE.fullmatch(line.strip())
+                for line in body.splitlines()
+                ):
                 curl = probes.build_curl(route.method, probes.build_url(self.base_url, route.path, route.method, param, probe.payload), param, probe.payload)
                 return [VerificationResult(
                     vuln_class=VulnClass.COMMAND_INJECTION,
