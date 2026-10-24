@@ -110,6 +110,7 @@ jobs:
           python -m pip install -e .
 
       - name: Build the executable
+        shell: bash
         run: |
           python -m PyInstaller dexsec.spec \
             --noconfirm \
@@ -160,6 +161,7 @@ jobs:
           merge-multiple: true
 
       - name: Write the release notes
+        shell: bash
         run: |
           python scripts/release_notes.py \
             "${{ github.ref_name }}" > release-notes.md

@@ -4,6 +4,16 @@ All notable changes to DEX-SEC are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/) and the
 project uses [Semantic Versioning](https://semver.org/).
 
+## [0.7.2] — 2026-10-24
+
+### Fixed
+- **Binary standalone untuk Windows kembali bisa dibangun.** Perintah
+  `python -m PyInstaller ...` memakai line continuation `\`, yang ditolak
+  PowerShell (shell bawaan Windows), sehingga job `binaries` gagal dan GitHub
+  Release tidak pernah dibuat. Langkah build kini berjalan di `bash`.
+- Langkah "Write the release notes" juga memakai `shell: bash` secara eksplisit
+  agar tidak bergantung pada shell bawaan runner.
+
 ## [0.7.1] — 2026-10-24
 
 ### Fixed

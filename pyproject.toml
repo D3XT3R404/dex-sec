@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dexsec"
-version = "0.7.1"
+version = "0.7.2"
 description = "DEX-SEC — Inside-Out Hybrid Application Security Testing CLI (SAST + safe DAST + auto-remediation)"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.10"
