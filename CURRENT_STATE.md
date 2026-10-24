@@ -92,7 +92,7 @@ Temuan statis pada fixture: `EXPOSED_SECRET_FILE` (3 di `.env`), `HARDCODE_SECRE
     `dexsec-macos-x64`, `dexsec-macos-arm64`.
   - **Bukti "user lain":** venv bersih → `pip install dexsec==0.7.2` → `dexsec version` = 0.7.2,
     `dexsec doctor` → "Everything looks good".
-- **Status Saat Ini:** **OK — DEX-SEC sudah publik di PyPI.**
+- **Status Saat Ini:** **OK — DEX-SEC sudah publik di PyPI.** Pipeline Release selesai semua job SUCCESS (termasuk `verify` yang menjalankan selftest + test_features). Catatan: workflow CI terpisah masih **flaky** (selftest terkadang gagal pada beberapa matrix cell OS/Python; sudah terjadi sebelum perubahan ini dan tidak terkait rilis).
 - **Tugas untuk AI Berikutnya:**
   1. Update `INSTALL.md` §2.4 (PyPI) — hapus catatan "PyPI belum ter-push".
   2. Lanjut **Milestone 4** (multi-target, SCA, policy-as-code) atau sisa M2.
