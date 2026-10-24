@@ -58,7 +58,9 @@ dexsec version          # harus keluar: DEX-SEC 0.7.2
 ```
 Untuk developer yang mau mengubah kodenya sendiri (mode editable):
 ```powershell
-cd C:\Users\ASUS\dex-sec
+# Clone/ekstrak source dulu, lalu jalankan dari folder projectnya:
+git clone https://github.com/D3XT3R404/dex-sec.git
+cd dex-sec
 python -m pip install --upgrade setuptools wheel
 python -m pip install -e .
 ```
@@ -221,7 +223,7 @@ dexsec scan --path C:\path\ke\project
 diletakkan di folder khusus:
 
 ```
-C:\Users\ASUS\dex-sec\hasil-scan\<nama-project>\<timestamp>-<host>\
+<folder-projek>\hasil-scan\<nama-project>\<timestamp>-<host>\
    ├── laporan.md      ringkasan Markdown
    ├── laporan.json    data lengkap (untuk CI / tool lain)
    ├── laporan.html    laporan interaktif (search & sort)

@@ -42,7 +42,10 @@ winget install Python.Python.3.11
 ### 2.2 Metode A — Dari source (paling umum untuk developer)
 
 ```powershell
-cd C:\Users\ASUS\dex-sec
+# Clone source dulu (atau ekstrak ZIP dari GitHub Releases),
+# lalu jalankan dari folder projectnya:
+git clone https://github.com/D3XT3R404/dex-sec.git
+cd dex-sec
 python -m pip install --upgrade pip setuptools wheel
 python -m pip install -e .            # mode editable: kode bisa kamu ubah langsung
 ```
@@ -127,7 +130,7 @@ dengan `matrix.os`), lalu distribusikan `dist/dexsec`.
 Folder `npm/` berisi wrapper NPM resmi:
 
 ```powershell
-cd C:\Users\ASUS\dex-sec\npm
+cd npm
 npm install -g .          # mendaftarkan perintah global `dexsec`
 dexsec scan --path . --target http://localhost:3000
 ```
