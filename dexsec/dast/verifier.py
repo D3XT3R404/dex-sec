@@ -234,45 +234,73 @@ class Verifier:
         ))
         return results
 
+   
     def verify_command_injection(self, finding: CodeFinding) -> list[VerificationResult]:
         route = finding.route
         if route is None:
             return []
+
         param = self._pick_param(route, finding)
         if param is None:
             return []
+
         for probe in probes.command_injection_probes():
-            resp, _, err = self._request(route.method, route.path, param, probe.payload)
+            resp, _, err = self._request(
+                route.method, route.path, param, probe.payload
+            )
+
             if err or resp is None:
                 continue
-                body = resp.text or ""
 
-# Canaries must appear as a standalone output line.
-# A canary merely reflected inside user input is not proof
-# that a shell command was executed.
+            body = resp.text or ""
+
+            # Canaries must appear as a standalone output line.
+            # A reflected canary alone does not prove command execution.
             if any(
                 CANARY_RE.fullmatch(line.strip())
                 for line in body.splitlines()
-                ):
-                curl = probes.build_curl(route.method, probes.build_url(self.base_url, route.path, route.method, param, probe.payload), param, probe.payload)
-                return [VerificationResult(
-                    vuln_class=VulnClass.COMMAND_INJECTION,
-                    status=VerificationStatus.CONFIRMED_VULNERABLE,
-                    target_url=route.path,
-                    payload=probe.payload,
-                    evidence=f"Canary '{probes.CANARY}' echoed back in response: command execution proven (harmless echo only).",
-                    http_status=resp.status_code,
-                    response_excerpt=self._excerpt(body),
-                    safe_poc_curl=curl,
-                )]
-        return [VerificationResult(
-            vuln_class=VulnClass.COMMAND_INJECTION,
-            status=VerificationStatus.NOT_REPRODUCIBLE,
-            target_url=route.path,
-            payload=param,
-            evidence="No command canary reflected in the response. Command may be sanitized or not user-reachable.",
-        )]
+            ):
+                curl = probes.build_curl(
+                    route.method,
+                    probes.build_url(
+                        self.base_url,
+                        route.path,
+                        route.method,
+                        param,
+                        probe.payload,
+                    ),
+                    param,
+                    probe.payload,
+                )
 
+                return [
+                    VerificationResult(
+                        vuln_class=VulnClass.COMMAND_INJECTION,
+                        status=VerificationStatus.CONFIRMED_VULNERABLE,
+                        target_url=route.path,
+                        payload=probe.payload,
+                        evidence=(
+                            f"Canary '{probes.CANARY}' appeared as a "
+                            "standalone response line. Verify that this "
+                            "is evidence of command execution."
+                        ),
+                        http_status=resp.status_code,
+                        response_excerpt=self._excerpt(body),
+                        safe_poc_curl=curl,
+                    )
+                ]
+
+        return [
+            VerificationResult(
+                vuln_class=VulnClass.COMMAND_INJECTION,
+                status=VerificationStatus.NOT_REPRODUCIBLE,
+                target_url=route.path,
+                payload=param,
+                evidence=(
+                    "No standalone command canary was found in the response."
+                ),
+            )
+        ]
     def verify_path_traversal(self, finding: CodeFinding) -> list[VerificationResult]:
         route = finding.route
         if route is None:
