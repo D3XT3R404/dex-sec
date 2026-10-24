@@ -70,7 +70,7 @@ Tujuan: DEX-SEC tidak lagi "sekali scan manual", tapi nempel di workflow develop
 - [ ] Notifikasi per-finding (mention orang yang owning file) — butuh integrasi VCS
 - [ ] Laporan PDF dengan grafik/severity distribution
 
-## Milestone 3.5: Distribution & Extensibility (SELESAI — 2026-10-22, v0.7.0)
+## Milestone 3.5: Distribution & Extensibility (SELESAI — 2026-10-22, v0.7.0; dipublikasikan v0.7.2 — 2026-10-24)
 - [x] Publish pipeline: CI (test multi-OS/multi-Python) + release (PyPI, 6 binary, GitHub Release, npm)
 - [x] docs/PUBLISH.md — setup PyPI/trusted publishing/Homebrew/Scoop + checklist rilis
 - [x] Konfigurasi dexsec.toml (exclude, min_severity, target, notify, ai) + dexsec init/dexsec config
@@ -78,6 +78,9 @@ Tujuan: DEX-SEC tidak lagi "sekali scan manual", tapi nempel di workflow develop
 - [x] dexsec manual — panduan offline yang ikut ter-install
 - [x] dexsec upgrade — update mandiri untuk pengguna binary
 - [x] Patch otomatis untuk PHP (escape mysqli)
+- [x] **Terbit di PyPI** — `pip install dexsec` (https://pypi.org/project/dexsec/) + GitHub Release
+      dengan 6 binary standalone (Windows/Linux/macOS × x64/arm64)
+- [ ] Terbit di npm (`npm install -g dexsec`) — butuh secret `NPM_TOKEN` di GitHub
 - [ ] Editor plugin (VS Code / Neovim) — ditunda, CLI dulu yang matang
 - [ ] Custom rules dari file YAML (policy-as-code, sebagian di Milestone 4)
 

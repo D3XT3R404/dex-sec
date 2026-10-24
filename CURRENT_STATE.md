@@ -9,9 +9,9 @@
 - **Active Phase:** Milestone 1 **SELESAI** (core + coverage luas). Sekarang masuk **Milestone 2**.
 - **Current Health:** Pipeline end-to-end berjalan & lolos self-test otomatis.
 - **Location:** `C:\Users\ASUS\dex-sec` (nama folder lama `C:\Users\ASUS\secflow` masih ada & sudah usang — hapus manual)
-- **Package name:** `dexsec` · Entry point: `dexsec` · Versi: `0.2.0`
+- **Package name:** `dexsec` · Entry point: `dexsec` · Versi: `0.7.2` (**ters publik di PyPI** — `pip install dexsec`)
 - **Runtime:** Python 3.11.9 (stdlib + rich/requests/typer, semuanya sudah terpasang)
-- **Next Immediate Task:** Milestone 2 — OAST/Interactsh, parser Express/Django akurat, mass assignment, CSRF, black-box API fuzzing.
+- **Next Immediate Task:** Milestone 4 (enterprise) atau sisa M2 (probe CSRF dinamis, parser JS penuh) + editor plugin.
 
 ## Cara Menjalankan
 
@@ -65,6 +65,38 @@ Temuan statis pada fixture: `EXPOSED_SECRET_FILE` (3 di `.env`), `HARDCODE_SECRE
 `DEBUG_MODE` (2), `INSECURE_DEPENDENCY` (1), `IDOR` (HIGH + MEDIUM).
 
 ## Log Aktivitas (Changelog Sesi)
+
+### [2026-10-24] - RILIS PUBLIK v0.7.2 — PyPI + GitHub Release + 6 binary standalone — oleh Opencode
+- **Tujuan:**用户 glandu bisa `pip install dexsec` untuk semua orang.
+- **Akar masalah (3 lapis, ketiganya diperbaiki):**
+  1. `release.yml` memakai `secrets` di dalam `if:` step → GitHub menolak seluruh workflow
+     (*Invalid workflow file: Unrecognized named-value: 'secrets'*), jadi run gagal **0 detik** tanpa job.
+     Diperbaiki di commit `d9acc45` (sesi AI lain) & dikonfirmasi di `origin/main`.
+  2. Semua run `Release` gagal karena menunjuk **commit lama** (tag `v0.7.1` lama仍然 menunjuk
+     versi workflow yang rusak) → tag dipindah ke commit yang sudah benar.
+  3. Job `binaries` gagal di Windows: `python -m PyInstaller ... \` memakai line continuation `\`
+     yang **ditolak PowerShell**. Diperbaiki dengan `shell: bash` eksplisit.
+  4. CI gagal di 12 matrix job: `ModuleNotFoundError: No module named 'yaml'` — `tests/test_features.py`
+     butuh PyYAML tapi `pyyaml` hanya ada di extra `yaml`. Diperbaiki: `pyyaml` masuk extra `dev`.
+- **Modul yang diubah:** `pyproject.toml` (versi `0.7.1`→`0.7.2`, extra `dev` + `pyyaml`),
+  `.github/workflows/release.yml` (`shell: bash` pada step build binary & release notes),
+  `CHANGELOG.md` (entri `0.7.1` & `0.7.2`).
+- **Hasil Verifikasi / Testing:**
+  - `python tests\selftest.py` → **SELFTEST PASSED** (confirmed=6, patch apply sukses, setelah patch confirmed=2).
+  - `python tests\test_features.py` → **FEATURE TESTS PASSED**.
+  - `scripts\check_workflows.py` → all 3 workflow valid; **actionlint 1.7.12** → clean.
+  - Workflow Release `40085212991` → **semua 9 job SUCCESS** (verify, pypi, 6 binaries, npm, release).
+  - **PyPI**: https://pypi.org/project/dexsec/ → versi `0.7.2` (wheel + sdist).
+  - **GitHub Release**: https://github.com/D3XT3R404/dex-sec/releases/tag/v0.7.2 → wheel, sdist,
+    `dexsec-windows-x64.exe`, `dexsec-windows-arm64.exe`, `dexsec-linux-x64`, `dexsec-linux-arm64`,
+    `dexsec-macos-x64`, `dexsec-macos-arm64`.
+  - **Bukti "user lain":** venv bersih → `pip install dexsec==0.7.2` → `dexsec version` = 0.7.2,
+    `dexsec doctor` → "Everything looks good".
+- **Status Saat Ini:** **OK — DEX-SEC sudah publik di PyPI.**
+- **Tugas untuk AI Berikutnya:**
+  1. Update `INSTALL.md` §2.4 (PyPI) — hapus catatan "PyPI belum ter-push".
+  2. Lanjut **Milestone 4** (multi-target, SCA, policy-as-code) atau sisa M2.
+  3. Ingat: `npm publish` butuh secret `NPM_TOKEN` (belum diisi — paket npm belum terbit).
 
 ### [2026-10-22 19:45] - Milestone 3.5: publish pipeline + config + machine output + manual offline (v0.7.0) — oleh Opencode
 - **Deliverable:**

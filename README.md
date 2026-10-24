@@ -45,19 +45,25 @@ Tambah bahasa baru? Cukup tambahkan satu blok `LanguageSpec` di
 
 ## Bentuk tool
 
-CLI, bukan GUI/web app. Sekali di-install (`pip install -e .`) perintahnya `dexsec` tersedia di terminal mana pun.
+CLI, bukan GUI/web app. Sekali di-install perintahnya `dexsec` tersedia di terminal mana pun.
+Sudah terbit di PyPI: <https://pypi.org/project/dexsec/>
 Detail lengkap: **[INSTALL.md](INSTALL.md)**.
 
 ## TUTORIAL: 5 menit pakai DEX-SEC
 
 ### Langkah 1 — Install (sekali saja)
+```bash
+pip install dexsec
+dexsec version          # harus keluar: DEX-SEC 0.7.2
+```
+Untuk developer yang mau mengubah kodenya sendiri (mode editable):
 ```powershell
 cd C:\Users\ASUS\dex-sec
 python -m pip install --upgrade setuptools wheel
 python -m pip install -e .
-dexsec version          # harus keluar: DEX-SEC 0.3.0
 ```
-Alternatif tanpa Python di mesin target: pakai `dist\dexsec.exe` (file tunggal, 14 MB).
+Alternatif tanpa Python di mesin target: unduh `dexsec-windows-x64.exe` (atau varian Linux/macOS)
+dari [Releases](https://github.com/D3XT3R404/dex-sec/releases/latest) — satu file, tanpa instalasi.
 > Kalau `dexsec` "tidak dikenali", buka terminal baru (PATH baru berlaku di terminal baru),
 > atau pakai `python -m dexsec ...` (fungsinya identik).
 

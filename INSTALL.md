@@ -90,7 +90,17 @@ Pipx membuat virtualenv khusus sehingga tidak bentrok dengan dependency project 
 pip install dexsec
 ```
 
-(PyPI belum ter-push; jalankan `python -m build && twine upload dist/*` bila sudah siap publik.)
+Paket ini sudah terbit di PyPI: <https://pypi.org/project/dexsec/>
+
+```powershell
+pip install dexsec          # versi terbaru
+pip install dexsec==0.7.2   # versi tertentu
+```
+
+Setelan upgrade: `pip install -U dexsec`.
+
+Rilis manual dari source tetap tersedia bila perlu: `python -m build && twine upload dist/*`
+(panduan lengkap ada di `docs/PUBLISH.md`).
 
 ### 2.5 Metode D — File executable tunggal (Windows / Linux / macOS)
 
